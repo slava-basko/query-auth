@@ -17,6 +17,11 @@ class Yii2RequestAdapter implements IncomingRequestInterface, RequestInterface
     protected $request;
 
     /**
+     * @var bool
+     */
+    protected $onlyGet = false;
+
+    /**
      * Public constructor
      *
      * @param Request $request
@@ -24,6 +29,7 @@ class Yii2RequestAdapter implements IncomingRequestInterface, RequestInterface
     public function __construct(Request $request)
     {
         $this->request = $request;
+        return $this;
     }
 
     /**
@@ -55,6 +61,10 @@ class Yii2RequestAdapter implements IncomingRequestInterface, RequestInterface
      */
     public function getParams()
     {
+        if ($this->onlyGet) {
+            return $this->request->get();
+        }
+
         if (strtolower($this->getMethod()) === 'get') {
             return $this->request->get();
         }
@@ -64,5 +74,19 @@ class Yii2RequestAdapter implements IncomingRequestInterface, RequestInterface
         }
 
         return $this->request->post();
+    }
+
+    /**
+     * @param $onlyGet
+     * @return $this
+     * @throws \Exception
+     */
+    public function setOnlyGet($onlyGet)
+    {
+        if (!is_bool($onlyGet)) {
+            throw new \Exception('Argument must be only boolean');
+        }
+        $this->onlyGet = $onlyGet;
+        return $this;
     }
 }

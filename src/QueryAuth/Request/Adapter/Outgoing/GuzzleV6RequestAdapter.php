@@ -65,10 +65,6 @@ class GuzzleV6RequestAdapter implements OutgoingRequestInterface, OutgoingImmuta
      */
     public function getParams()
     {
-        if ($this->getMethod() === 'POST') {
-            return [];
-        }
-
         return \GuzzleHttp\Psr7\parse_query($this->request->getUri()->getQuery());
     }
 
